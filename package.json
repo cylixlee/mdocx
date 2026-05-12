@@ -1,6 +1,6 @@
 {
   "name": "@cylixlee/mdocx",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Convert Markdown file to DOCX format",
   "keywords": [
     "markdown",
@@ -65,7 +65,8 @@
     "fast-xml-parser": "^5.3.0",
     "image-size": "^2.0.2",
     "katex": "^0.16.23",
-    "marked": "^15.0.8"
+    "marked": "^15.0.8",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { z } from 'zod/v4-mini'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import markdownToDocx, { Packer, presets } from '../dist/index.node.mjs'
@@ -29,27 +30,10 @@ export async function start() {
     {
       description: 'Convert a Markdown file to DOCX format.',
       inputSchema: {
-        type: 'object',
-        properties: {
-          inputPath: {
-            type: 'string',
-            description: 'Path to the input Markdown file (.md)',
-          },
-          outputPath: {
-            type: 'string',
-            description: 'Path for the output DOCX file (defaults to input filename with .docx extension)',
-          },
-          preset: {
-            type: 'string',
-            enum: Object.keys(presets),
-            description: `Style preset: ${Object.keys(presets).join(', ')} (default: "academic")`,
-          },
-          config: {
-            type: 'string',
-            description: 'Path to a JSON config file (may include preset, style, ignoreImage, math, etc.)',
-          },
-        },
-        required: ['inputPath'],
+        inputPath: z.string({ description: 'Path to the input Markdown file (.md)' }),
+        outputPath: z.optional(z.string({ description: 'Path for the output DOCX file (defaults to input filename with .docx extension)' })),
+        preset: z.optional(z.enum(Object.keys(presets), { description: `Style preset: ${Object.keys(presets).join(', ')} (default: "academic")` })),
+        config: z.optional(z.string({ description: 'Path to a JSON config file (may include preset, style, ignoreImage, math, etc.)' })),
       },
     },
     async (args) => {
