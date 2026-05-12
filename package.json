@@ -2,20 +2,27 @@
   "name": "@cylixlee/mdocx",
   "version": "0.1.0",
   "description": "Convert Markdown file to DOCX format",
-  "scripts": {
-    "dev": "tsdown --watch",
-    "build": "tsdown",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "prepublishOnly": "pnpm run build",
-    "release-it": "release-it",
-    "ts-check": "tsc --noEmit"
-  },
-  "type": "module",
-  "main": "dist/index.node.cjs",
-  "module": "dist/index.node.mjs",
-  "types": "dist/index.d.ts",
+  "keywords": [
+    "markdown",
+    "docx",
+    "converter",
+    "markdown-to-docx",
+    "markdown-docx",
+    "markdown-to-word",
+    "markdown-to-doc",
+    "markdown-to-word-doc"
+  ],
   "homepage": "https://github.com/cylixlee/mdocx",
+  "bugs": {
+    "url": "https://github.com/cylixlee/mdocx/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cylixlee/mdocx.git"
+  },
+  "license": "MIT",
+  "author": "Cylix Lee <cylix.lee@outlook.com> (https://github.com/cylixlee)",
+  "type": "module",
   "exports": {
     ".": {
       "import": {
@@ -29,40 +36,27 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "dist/index.node.cjs",
+  "types": "dist/index.d.ts",
   "bin": {
     "markdown-docx": "bin/cli.mjs"
   },
-  "sideEffects": false,
+  "directories": {
+    "example": "examples",
+    "test": "tests"
+  },
   "files": [
     "dist",
     "bin"
   ],
-  "keywords": [
-    "markdown",
-    "docx",
-    "converter",
-    "markdown-to-docx",
-    "markdown-docx",
-    "markdown-to-word",
-    "markdown-to-doc",
-    "markdown-to-word-doc"
-  ],
-  "author": {
-    "name": "Cylix Lee",
-    "email": "cylix.lee@outlook.com",
-    "url": "https://github.com/cylixlee"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cylixlee/mdocx.git"
-  },
-  "license": "MIT",
-  "packageManager": "pnpm@10.6.5",
-  "devDependencies": {
-    "@types/node": "^22.14.0",
-    "tsdown": "^0.15.1",
-    "typescript": "^5.8.3",
-    "vitest": "^3.1.1"
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "pnpm run build",
+    "release-it": "release-it",
+    "ts-check": "tsc --noEmit"
   },
   "dependencies": {
     "commander": "^13.1.0",
@@ -72,6 +66,15 @@
     "katex": "^0.16.23",
     "marked": "^15.0.8"
   },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "tsdown": "^0.15.1",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.1"
+  },
+  "module": "dist/index.node.mjs",
+  "sideEffects": false,
+  "packageManager": "pnpm@10.6.5",
   "release-it": {
     "npm": {
       "publish": false
