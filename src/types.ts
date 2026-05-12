@@ -1,0 +1,258 @@
+import {
+  FileChild, IParagraphStylePropertiesOptions, IPropertiesOptions, IRunStylePropertiesOptions,
+  IShadingAttributesProperties, ParagraphChild
+} from 'docx'
+import { MarkedOptions, Tokens } from 'marked'
+
+import { BlockKatex, Footnote, FootnoteRef, InlineKatex } from './extensions'
+import { MarkdownDocx } from './MarkdownDocx'
+
+export type MarkdownImageType = 'jpg' | 'png' | 'gif' | 'bmp' | 'svg' | 'webp'
+
+export type MarkdownImageItem = {
+  type: MarkdownImageType
+  data: Buffer | string | Uint8Array | ArrayBuffer
+  width: number
+  height: number
+}
+
+export type MarkdownImageAdapter = (token: Tokens.Image) => Promise<null | MarkdownImageItem>
+
+export interface MarkdownDocxOptions extends MarkedOptions {
+  imageAdapter?: MarkdownImageAdapter
+
+  /**
+   * Built-in style preset name
+   * @default "academic"
+   */
+  preset?: string
+
+  /**
+   * Style overrides on top of the preset
+   */
+  style?: Partial<IMarkdownStyleConfig>
+
+  /**
+   * Math engine configuration
+   * builtin: simple unicode mapping
+   * katex: KaTeX -> MathML -> docx Math
+   */
+  math?: {
+    engine?: 'builtin' | 'katex'
+    katexOptions?: Record<string, any>
+    /** Prefer constructs that are broadly supported by LibreOffice (e.g., avoid true OMML matrices and n-ary) */
+    libreOfficeCompat?: boolean
+  }
+
+  /**
+   * do not download image
+   * @default false
+   */
+  ignoreImage?: boolean
+
+  /**
+   * do not parse footnote
+   * @default false
+   */
+  ignoreFootnote?: boolean
+
+  /**
+   * do not parse html
+   * @default false
+   */
+  ignoreHtml?: boolean
+
+  /**
+   * Properties for the document
+   */
+  document?: Omit<IPropertiesOptions, 'sections'>
+}
+
+export type IBlockToken =
+  | Tokens.Space
+  | Tokens.Code
+  | Tokens.Heading
+  | Tokens.Hr
+  | Tokens.Blockquote
+  | Tokens.List
+  | Tokens.HTML
+  | Tokens.Def
+  | Tokens.Table
+  | Tokens.Heading
+  | Tokens.Paragraph
+  | Tokens.Text
+  // plugin
+  | Footnote
+
+export type IInlineToken =
+  | Tokens.Escape
+  | Tokens.Tag
+  | Tokens.Link
+  | Tokens.Em
+  | Tokens.Strong
+  | Tokens.Codespan
+  | Tokens.Br
+  | Tokens.Del
+  | Tokens.Text
+  | Tokens.Image
+  // plugin
+  | FootnoteRef
+  | InlineKatex
+  | BlockKatex
+
+export type IParagraphToken =
+  | Tokens.Paragraph
+  | Tokens.Blockquote
+  | Tokens.Heading
+
+export type ITextAttr = {
+  style?: string
+
+  // attrs
+  bold?: boolean
+  italics?: boolean
+  underline?: boolean // with options
+  strike?: boolean
+  break?: boolean | number
+
+  // text style
+  html?: boolean
+  link?: boolean
+  strong?: boolean
+  em?: boolean
+  codespan?: boolean
+  del?: boolean
+  br?: boolean
+
+}
+
+export type IBlockAttr = {
+  style?: string
+
+  blockquote?: boolean
+
+  list?: {
+    task?: boolean
+    checked?: boolean
+    level: number
+    type?: 'number' | 'bullet'
+    /**
+     * @link https://github.com/dolanmiu/docx/pull/816
+     * @link https://github.com/dolanmiu/docx/issues/3037#issuecomment-3164253396
+     */
+    instance?: number // numbering instance
+  }
+
+  listNone?: boolean
+
+  heading?: number
+  code?: boolean
+
+  align?: 'left' | 'center' | 'right' | null
+
+  footnote?: boolean
+
+}
+
+export type Writeable<T> = {
+  -readonly [P in keyof T]: T[P]
+}
+
+export type IMarkdownToken =
+  | 'space' | 'code' | 'hr' | 'blockquote' | 'html' | 'def' | 'paragraph' | 'text' | 'footnote' | 'listItem' | 'table' | 'tableHeader' | 'tableCell' | 'heading1' | 'heading2' | 'heading3' | 'heading4' | 'heading5' | 'heading6'
+  | 'tag' | 'link' | 'strong' | 'em' | 'codespan' | 'del' | 'br'
+
+export type IMarkdownStyle = {
+  inline?: boolean
+  className: string
+  name?: string
+  basedOn?: string
+  next?: string
+  run?: IRunStylePropertiesOptions
+  paragraph?: IParagraphStylePropertiesOptions
+  quickFormat?: boolean
+
+  // special attributes
+  properties?: any
+}
+
+export type IMarkdownRenderFunction =
+  (render: MarkdownDocx, token: IInlineToken | IBlockToken, attr?: ITextAttr | IBlockAttr)
+    => ParagraphChild | ParagraphChild[] | FileChild | FileChild[] | false | null
+
+// ─── Style Configuration Types ───────────────────────────────────────────
+
+export type IFontConfig = string | {
+  ascii?: string
+  eastAsia?: string
+  hAnsi?: string
+  cs?: string
+}
+
+export interface IBorderConfig {
+  style?: string
+  size?: number
+  color?: string
+  space?: number
+}
+
+export interface IElementStyle {
+  font?: IFontConfig
+  size?: number
+  color?: string
+  bold?: boolean
+  italics?: boolean
+  underline?: boolean
+  strike?: boolean
+
+  spacingBefore?: number
+  spacingAfter?: number
+  lineSpacing?: number
+  alignment?: 'left' | 'center' | 'right' | 'both'
+
+  indentLeft?: number
+  indentHanging?: number
+  indentFirstLine?: number
+  keepNext?: boolean
+  outlineLevel?: number
+
+  threeLine?: boolean
+
+  borderTop?: IBorderConfig
+  borderBottom?: IBorderConfig
+  borderLeft?: IBorderConfig
+  borderRight?: IBorderConfig
+
+  background?: string
+}
+
+export interface IMarkdownStyleConfig {
+  defaultFont?: IFontConfig
+  defaultSize?: number
+  lineSpacing?: number
+
+  paragraph?: Partial<IElementStyle>
+  heading1?: Partial<IElementStyle>
+  heading2?: Partial<IElementStyle>
+  heading3?: Partial<IElementStyle>
+  heading4?: Partial<IElementStyle>
+  heading5?: Partial<IElementStyle>
+  heading6?: Partial<IElementStyle>
+  code?: Partial<IElementStyle>
+  codespan?: Partial<IElementStyle>
+  blockquote?: Partial<IElementStyle>
+  link?: Partial<IElementStyle>
+  strong?: Partial<IElementStyle>
+  em?: Partial<IElementStyle>
+  del?: Partial<IElementStyle>
+  hr?: Partial<IElementStyle>
+  listItem?: Partial<IElementStyle>
+  table?: Partial<IElementStyle>
+  tableHeader?: Partial<IElementStyle>
+  tableCell?: Partial<IElementStyle>
+  tag?: Partial<IElementStyle>
+  html?: Partial<IElementStyle>
+  space?: Partial<IElementStyle>
+  footnote?: Partial<IElementStyle>
+  br?: Partial<IElementStyle>
+}

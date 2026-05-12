@@ -1,0 +1,85 @@
+{
+  "name": "@cylixlee/mdocx",
+  "version": "0.1.0",
+  "description": "Convert Markdown file to DOCX format",
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "pnpm run build",
+    "release-it": "release-it",
+    "ts-check": "tsc --noEmit"
+  },
+  "type": "module",
+  "main": "dist/index.node.cjs",
+  "module": "dist/index.node.mjs",
+  "types": "dist/index.d.ts",
+  "homepage": "https://github.com/cylixlee/mdocx",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.node.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.node.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "markdown-docx": "bin/cli.mjs"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "keywords": [
+    "markdown",
+    "docx",
+    "converter",
+    "markdown-to-docx",
+    "markdown-docx",
+    "markdown-to-word",
+    "markdown-to-doc",
+    "markdown-to-word-doc"
+  ],
+  "author": {
+    "name": "Cylix Lee",
+    "email": "cylix.lee@outlook.com",
+    "url": "https://github.com/cylixlee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cylixlee/mdocx.git"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@10.6.5",
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "tsdown": "^0.15.1",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.1"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "docx": "^9.5.1",
+    "fast-xml-parser": "^5.3.0",
+    "image-size": "^2.0.2",
+    "katex": "^0.16.23",
+    "marked": "^15.0.8"
+  },
+  "release-it": {
+    "npm": {
+      "publish": false
+    }
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

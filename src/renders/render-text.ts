@@ -1,0 +1,35 @@
+import { IRunOptions, TextRun } from 'docx'
+
+import { MarkdownDocx } from '../MarkdownDocx'
+import { ITextAttr, Writeable } from '../types'
+
+export function renderText (render: MarkdownDocx, text: string, attr: ITextAttr): TextRun[] {
+  const multipleLines = text.trim().split(/\n/)
+  const totalLine = multipleLines.length
+
+  const options: Writeable<IRunOptions> = {
+    style: attr.style,
+    italics: attr.italics,
+    bold: attr.bold,
+    underline: attr.underline ? {} : undefined,
+    strike: attr.strike,
+    break: attr.break ? (typeof attr.break === 'number' ? attr.break : 1) : undefined,
+  }
+
+  if (totalLine > 1) {
+    const textNodes: TextRun[] = []
+    textNodes.push(...multipleLines.map((line, index) => new TextRun({
+      ...options,
+      text: line,
+      break: index > 0 ? 1 : undefined,
+    })))
+    return textNodes
+  }
+
+  return [
+    new TextRun({
+      text,
+      ...options,
+    })
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "_note": "All values shown are defaults. Remove or omit any property to use the default. Run 'markdown-docx --help' for CLI options.",
+  "preset": "academic",
+  "ignoreImage": false,
+  "ignoreFootnote": false,
+  "ignoreHtml": false,
+  "gfm": true,
+  "math": {
+    "engine": "katex",
+    "libreOfficeCompat": false
+  },
+  "style": {
+    "defaultFont": { "ascii": "Times New Roman", "eastAsia": "宋体" },
+    "defaultSize": 12,
+    "lineSpacing": 1.5,
+    "strong": {
+      "font": { "ascii": "Times New Roman", "eastAsia": "黑体" },
+      "bold": false
+    },
+    "heading1": {
+      "font": { "ascii": "Times New Roman", "eastAsia": "黑体" },
+      "size": 22,
+      "bold": true,
+      "spacingBefore": 24,
+      "spacingAfter": 12
+    },
+    "heading2": {
+      "font": { "ascii": "Times New Roman", "eastAsia": "黑体" },
+      "size": 16,
+      "bold": true,
+      "spacingBefore": 20,
+      "spacingAfter": 10
+    },
+    "heading3": {
+      "font": { "ascii": "Times New Roman", "eastAsia": "黑体" },
+      "size": 14,
+      "bold": true,
+      "spacingBefore": 16,
+      "spacingAfter": 8
+    }
+  }
+}
