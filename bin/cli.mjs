@@ -25,6 +25,14 @@ See examples/sample-config.json for a full config file reference.
   .option('-c, --config <file>', 'JSON config file (may include preset, style, ignoreImage, math, etc.)')
 
 program
+  .command('mcp')
+  .description('Start MCP server (stdio transport)')
+  .action(async () => {
+    const { start } = await import('./mcp.mjs')
+    await start()
+  })
+
+program
   .action(doCommand)
 
 program
