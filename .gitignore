@@ -1,3 +1,5 @@
+__snapshots__
+*.snap
 *.docx
 
 # Logs
