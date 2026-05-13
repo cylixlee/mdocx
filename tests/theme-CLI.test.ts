@@ -23,18 +23,18 @@ afterEach(() => {
 
 describe('CLI --preset flag', () => {
   it('creates docx with --preset academic', () => {
-    execSync(`node bin/cli.mjs --input ${inputFile} --output ${outputFile} --preset academic`)
+    execSync(`node dist/cli.mjs --input ${inputFile} --output ${outputFile} --preset academic`)
     expect(fs.existsSync(outputFile)).toBe(true)
   })
 
   it('creates docx with --preset minimal', () => {
-    execSync(`node bin/cli.mjs --input ${inputFile} --output ${outputFile} --preset minimal`)
+    execSync(`node dist/cli.mjs --input ${inputFile} --output ${outputFile} --preset minimal`)
     expect(fs.existsSync(outputFile)).toBe(true)
   })
 
   it('throws error for unknown preset', () => {
     expect(() => {
-      execSync(`node bin/cli.mjs --input ${inputFile} --output ${outputFile} --preset nonexistent`)
+      execSync(`node dist/cli.mjs --input ${inputFile} --output ${outputFile} --preset nonexistent`)
     }).toThrow()
   })
 })
@@ -50,7 +50,7 @@ describe('CLI --config flag', () => {
       }
     }))
 
-    execSync(`node bin/cli.mjs --input ${inputFile} --output ${outputFile} --config ${configFile}`)
+    execSync(`node dist/cli.mjs --input ${inputFile} --output ${outputFile} --config ${configFile}`)
     expect(fs.existsSync(outputFile)).toBe(true)
 
     fs.unlinkSync(configFile)
@@ -58,7 +58,7 @@ describe('CLI --config flag', () => {
 
   it('throws error for missing config file', () => {
     expect(() => {
-      execSync(`node bin/cli.mjs --input ${inputFile} --output ${outputFile} --config /nonexistent/config.json`)
+      execSync(`node dist/cli.mjs --input ${inputFile} --output ${outputFile} --config /nonexistent/config.json`)
     }).toThrow()
   })
 })
@@ -70,7 +70,7 @@ describe('CLI precedence: --preset overrides --config', () => {
       preset: 'academic',
     }))
 
-    execSync(`node bin/cli.mjs --input ${inputFile} --output ${outputFile} --config ${configFile} --preset minimal`)
+    execSync(`node dist/cli.mjs --input ${inputFile} --output ${outputFile} --config ${configFile} --preset minimal`)
     expect(fs.existsSync(outputFile)).toBe(true)
 
     fs.unlinkSync(configFile)

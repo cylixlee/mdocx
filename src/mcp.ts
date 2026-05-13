@@ -3,19 +3,28 @@ import path from 'node:path'
 import { z } from 'zod/v4-mini'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
-import markdownToDocx, { Packer, presets } from '../dist/index.node.mjs'
+import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js'
+import markdownToDocx, { Packer, presets } from './entry-node'
 
-function resolveOutputPath(inputPath, outputPath) {
+function descStr(d: string) {
+  return z.string({ description: d } as any)
+}
+
+function descEnum(values: string[], d: string) {
+  return z.enum(values, { description: d } as any)
+}
+
+function resolveOutputPath(inputPath: string, outputPath?: string) {
   if (outputPath) return outputPath
   return inputPath.replace(/\.mdx?$/, '.docx')
 }
 
-async function loadConfigFile(configPath) {
+async function loadConfigFile(configPath: string) {
   const content = await fs.readFile(configPath, 'utf-8')
   return JSON.parse(content)
 }
 
-export async function start() {
+export async function start(): Promise<void> {
   const pkg = JSON.parse(
     await fs.readFile(new URL('../package.json', import.meta.url), 'utf-8')
   )
@@ -30,13 +39,13 @@ export async function start() {
     {
       description: 'Convert a Markdown file to DOCX format.',
       inputSchema: {
-        inputPath: z.string({ description: 'Path to the input Markdown file (.md)' }),
-        outputPath: z.optional(z.string({ description: 'Path for the output DOCX file (defaults to input filename with .docx extension)' })),
-        preset: z.optional(z.enum(Object.keys(presets), { description: `Style preset: ${Object.keys(presets).join(', ')} (default: "academic")` })),
-        config: z.optional(z.string({ description: 'Path to a JSON config file (may include preset, style, ignoreImage, math, etc.)' })),
+        inputPath: descStr('Path to the input Markdown file (.md)'),
+        outputPath: z.optional(descStr('Path for the output DOCX file (defaults to input filename with .docx extension)')),
+        preset: z.optional(descEnum(Object.keys(presets), `Style preset: ${Object.keys(presets).join(', ')} (default: "academic")`)),
+        config: z.optional(descStr('Path to a JSON config file (may include preset, style, ignoreImage, math, etc.)')),
       },
     },
-    async (args) => {
+    async (args): Promise<CallToolResult> => {
       const { inputPath, outputPath, preset, config: configPath } = args
 
       const resolvedOutput = resolveOutputPath(inputPath, outputPath)
@@ -48,13 +57,13 @@ export async function start() {
         }
       }
 
-      const options = {}
+      const options: Record<string, any> = {}
 
       if (configPath) {
         try {
           const configOptions = await loadConfigFile(configPath)
           Object.assign(options, configOptions)
-        } catch (err) {
+        } catch (err: any) {
           return {
             content: [{ type: 'text', text: `Failed to load config file "${configPath}": ${err.message}` }],
             isError: true,
@@ -66,10 +75,10 @@ export async function start() {
         options.preset = preset
       }
 
-      let content
+      let content: string
       try {
         content = await fs.readFile(inputPath, 'utf-8')
-      } catch (err) {
+      } catch (err: any) {
         return {
           content: [{ type: 'text', text: `Failed to read input file "${inputPath}": ${err.message}` }],
           isError: true,
@@ -83,10 +92,10 @@ export async function start() {
         }
       }
 
-      let docx
+      let docx: any
       try {
         docx = await markdownToDocx(content, options)
-      } catch (err) {
+      } catch (err: any) {
         return {
           content: [{ type: 'text', text: `Conversion failed: ${err.message}` }],
           isError: true,

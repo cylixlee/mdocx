@@ -1,20 +1,25 @@
-#!/usr/bin/env node
-
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { Command } from 'commander'
-import markdownToDocx, { Packer, presets } from '../dist/index.node.mjs'
+import markdownToDocx, { Packer, presets } from './entry-node'
+import { start } from './mcp'
 
-const pkg = JSON.parse(await fs.readFile(new URL('../package.json', import.meta.url), 'utf-8'))
-const { name, description, version } = pkg
+const pkg = JSON.parse(
+  await fs.readFile(new URL('../package.json', import.meta.url), 'utf-8')
+)
+
+const NAME        = 'mdocx'
+const DESCRIPTION = 'Convert Markdown file to DOCX format'
+const VERSION     = pkg.version
+
 const presetNames = Object.keys(presets)
 
 const program = new Command()
 
 program
-  .name(name)
-  .description(description)
-  .version(version, '-v, --version', 'output the version number')
+  .name(NAME)
+  .description(DESCRIPTION)
+  .version(VERSION, '-v, --version', 'output the version number')
   .addHelpText('after', `
 Presets: ${presetNames.join(', ')}
 See examples/sample-config.json for a full config file reference.
@@ -28,7 +33,6 @@ program
   .command('mcp')
   .description('Start MCP server (stdio transport)')
   .action(async () => {
-    const { start } = await import('./mcp.mjs')
     await start()
   })
 
@@ -37,7 +41,7 @@ program
 
 program
   .parseAsync(process.argv)
-  .catch((err) => {
+  .catch((err: Error) => {
     console.error(`\x1b[31mError: ${err.message}\x1b[0m`)
     if (err.message === 'Input file is required') {
       program.help()
@@ -47,7 +51,7 @@ program
     process.exit(1)
   })
 
-async function doCommand(options) {
+async function doCommand(options: Record<string, any>) {
   if (!options.input) {
     throw new Error('Input file is required')
   }
@@ -60,17 +64,17 @@ async function doCommand(options) {
   if (!ext) {
     options.output += '.docx'
   } else if (ext.toLowerCase() !== '.docx') {
-    throw new Error(`[${name}] Output file must be a .docx file, but got ${ext}`)
+    throw new Error(`[${NAME}] Output file must be a .docx file, but got ${ext}`)
   }
 
-  const markdownDocxOptions = {}
+  const markdownDocxOptions: Record<string, any> = {}
 
   if (options.config) {
     try {
       const configContent = await fs.readFile(options.config, 'utf-8')
       const baseOptions = JSON.parse(configContent)
       Object.assign(markdownDocxOptions, baseOptions)
-    } catch (err) {
+    } catch (err: any) {
       throw new Error(`Failed to load config file "${options.config}": ${err.message}`)
     }
   }
@@ -81,13 +85,13 @@ async function doCommand(options) {
 
   const content = await fs.readFile(options.input, 'utf-8')
   if (!content) {
-    throw new Error(`[${name}] File ${options.input} is empty`)
+    throw new Error(`[${NAME}] File ${options.input} is empty`)
   }
 
   const docx = await markdownToDocx(content, markdownDocxOptions)
-  const buffer = await Packer.toBuffer(docx)
+  const buffer = Buffer.from(await Packer.toBuffer(docx))
 
   await fs.writeFile(options.output, buffer)
 
-  console.log(`[${name}] File ${options.output} created successfully`)
+  console.log(`[${NAME}] File ${options.output} created successfully`)
 }

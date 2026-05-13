@@ -1,6 +1,6 @@
 {
   "name": "@cylixlee/mdocx",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Convert Markdown file to DOCX format",
   "keywords": [
     "markdown",
@@ -39,15 +39,10 @@
   "main": "dist/index.node.cjs",
   "types": "dist/index.d.ts",
   "bin": {
-    "mdocx": "bin/cli.mjs"
-  },
-  "directories": {
-    "example": "examples",
-    "test": "tests"
+    "mdocx": "dist/cli.mjs"
   },
   "files": [
-    "dist",
-    "bin"
+    "dist"
   ],
   "scripts": {
     "dev": "tsdown --watch",
@@ -55,8 +50,8 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "prepublishOnly": "pnpm run build",
-    "release-it": "release-it",
-    "ts-check": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/cli.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
@@ -74,14 +69,8 @@
     "typescript": "^5.8.3",
     "vitest": "^3.1.1"
   },
-  "module": "dist/index.node.mjs",
   "sideEffects": false,
   "packageManager": "pnpm@10.6.5",
-  "release-it": {
-    "npm": {
-      "publish": false
-    }
-  },
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
