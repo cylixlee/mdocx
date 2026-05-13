@@ -185,7 +185,7 @@ export function createMarkdownStyle(config: IMarkdownStyleConfig): Record<IMarkd
       }
     }
 
-    if (token === 'tableHeader' || token === 'table') {
+    if (token === 'tableHeader' || token === 'tableCell' || token === 'table') {
       style.properties = element
     }
 

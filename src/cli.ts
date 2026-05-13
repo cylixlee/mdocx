@@ -1,8 +1,11 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { Command } from 'commander'
-import markdownToDocx, { Packer, presets } from './entry-node'
+import markdownToDocx, { MarkdownDocx, Packer, presets } from './index'
+import { downloadImage } from './adapters/nodejs'
 import { start } from './mcp'
+
+MarkdownDocx.defaultOptions.imageAdapter = downloadImage
 
 const pkg = JSON.parse(
   await fs.readFile(new URL('../package.json', import.meta.url), 'utf-8')
@@ -82,6 +85,8 @@ async function doCommand(options: Record<string, any>) {
   if (options.preset) {
     markdownDocxOptions.preset = options.preset
   }
+
+  markdownDocxOptions.baseDir = path.dirname(path.resolve(options.input))
 
   const content = await fs.readFile(options.input, 'utf-8')
   if (!content) {

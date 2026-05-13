@@ -3,6 +3,7 @@ import { Tokens } from 'marked'
 import fs from 'node:fs/promises'
 import http from 'node:http'
 import https from 'node:https'
+import path from 'node:path'
 
 import { MarkdownImageAdapter, MarkdownImageItem } from '../types'
 import { getImageExtension, isHttp } from '../utils'
@@ -11,14 +12,14 @@ const MAX_IMAGE_WIDTH = 600
 
 const SVG_HEAD = Buffer.from('<svg')
 
-export const downloadImage: MarkdownImageAdapter = async function (token: Tokens.Image) {
+export const downloadImage: MarkdownImageAdapter = async function (token: Tokens.Image, srcBaseDir?: string) {
   const src = token.href
   if (!src) {
     return null
   }
 
   try {
-    const buffer = await loadImage(src)
+    const buffer = await loadImage(src, srcBaseDir)
 
     if (isSvgBuffer(buffer)) {
       return handleSvgImage(buffer)
@@ -88,7 +89,7 @@ function parseSvgDimensions(buffer: Buffer): { width: number; height: number } {
   return { width: 600, height: 450 }
 }
 
-function loadImage(src: string) {
+function loadImage(src: string, srcBaseDir?: string) {
   if (isHttp(src)) {
     return new Promise<Buffer>((resolve, reject) => {
       const agent = src.startsWith('https') ? https : http
@@ -106,5 +107,8 @@ function loadImage(src: string) {
       })
     })
   }
-  return fs.readFile(src)
+  const resolvedPath = (srcBaseDir && !isHttp(src))
+    ? path.resolve(srcBaseDir, src)
+    : src
+  return fs.readFile(resolvedPath)
 }

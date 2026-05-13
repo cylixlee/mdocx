@@ -107,7 +107,13 @@ export const academic: IMarkdownStyleConfig = {
 
   tableHeader: {
     font: { ascii: 'Times New Roman', eastAsia: '黑体' },
+    size: 10.5,
     bold: false,
+  },
+
+  tableCell: {
+    font: { ascii: 'Times New Roman', eastAsia: '宋体' },
+    size: 10.5,
   },
 
   table: {

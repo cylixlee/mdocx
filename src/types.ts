@@ -16,7 +16,7 @@ export type MarkdownImageItem = {
   height: number
 }
 
-export type MarkdownImageAdapter = (token: Tokens.Image) => Promise<null | MarkdownImageItem>
+export type MarkdownImageAdapter = (token: Tokens.Image, srcBaseDir?: string) => Promise<null | MarkdownImageItem>
 
 export interface MarkdownDocxOptions extends MarkedOptions {
   imageAdapter?: MarkdownImageAdapter
@@ -61,6 +61,12 @@ export interface MarkdownDocxOptions extends MarkedOptions {
    * @default false
    */
   ignoreHtml?: boolean
+
+  /**
+   * Base directory for resolving relative image references.
+   * When set, relative image paths in the markdown are resolved relative to this directory.
+   */
+  baseDir?: string
 
   /**
    * Properties for the document

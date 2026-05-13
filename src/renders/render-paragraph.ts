@@ -13,8 +13,10 @@ export function renderParagraph (render: MarkdownDocx, tokens: IInlineToken[] | 
 
   const hasList = !attr.listNone && attr.list
 
+  const isMdHeading = attr.style?.startsWith('MdHeading') ?? false
+
   const options: IParagraphOptions = {
-    heading,
+    heading: heading && !isMdHeading ? heading : undefined,
     alignment,
     bullet: hasList && attr.list?.type === 'bullet' ? { level: Math.min(attr.list.level, 9) } : undefined,
     numbering: hasList && attr.list?.type === 'number' ? {

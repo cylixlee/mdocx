@@ -110,7 +110,7 @@ export class MarkdownDocx {
       const cache: MarkdownImageItem = {} as unknown as MarkdownImageItem
       store.set(token.href, cache)
 
-      return imageAdapter(token).then(item => {
+      return imageAdapter(token, this.options.baseDir).then(item => {
         Object.assign(cache, item)
         return cache
       })

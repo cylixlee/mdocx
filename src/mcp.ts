@@ -4,7 +4,10 @@ import { z } from 'zod/v4-mini'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js'
-import markdownToDocx, { Packer, presets } from './entry-node'
+import markdownToDocx, { MarkdownDocx, Packer, presets } from './index'
+import { downloadImage } from './adapters/nodejs'
+
+MarkdownDocx.defaultOptions.imageAdapter = downloadImage
 
 function descStr(d: string) {
   return z.string({ description: d } as any)
@@ -91,6 +94,8 @@ export async function start(): Promise<void> {
           isError: true,
         }
       }
+
+      options.baseDir = path.dirname(path.resolve(inputPath))
 
       let docx: any
       try {
