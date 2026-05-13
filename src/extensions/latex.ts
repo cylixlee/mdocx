@@ -19,7 +19,7 @@ const blockRule = /^(\${1,2})\n((?:\\[^]|[^\\])+?)\n\1(?:\n|$)/;
 // const kQueueKey = Symbol.for('markdown-docx/latexQueue')
 
 export default function latex(lexer: Lexer): IExtension {
-  const nonStandard = false // lexer.options.nonStandard;
+  const nonStandard = true // drop lookahead restriction to avoid maintaining a whitelist of trailing characters
   const ruleReg = nonStandard ? inlineRuleNonStandard : inlineRule;
 
   return {
