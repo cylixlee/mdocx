@@ -30,5 +30,6 @@ export default defineConfig([
     outDir: 'dist',
     clean: false,
     outExtensions: () => ({ js: '.mjs' }),
+    banner: { js: '#!/usr/bin/env node\n' },
   },
 ])
