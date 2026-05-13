@@ -1,6 +1,6 @@
 {
   "name": "@cylixlee/mdocx",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Convert Markdown file to DOCX format",
   "keywords": [
     "markdown",

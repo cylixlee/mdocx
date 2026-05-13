@@ -27,6 +27,9 @@ export const downloadImage: MarkdownImageAdapter = async function (token: Tokens
 
     const { width, height, type } = imagesize(buffer)
 
+    const cappedWidth = Math.min(width, MAX_IMAGE_WIDTH)
+    const cappedHeight = width ? Math.round(height * cappedWidth / width) : height
+
     const supportType = getImageExtension(src, type)
 
     if (!supportType) {
@@ -41,8 +44,8 @@ export const downloadImage: MarkdownImageAdapter = async function (token: Tokens
     return {
       type: supportType,
       data: buffer,
-      width,
-      height,
+      width: cappedWidth,
+      height: cappedHeight,
     }
   } catch (error) {
     console.error(`[MarkdownDocx] downloadImageError`, error)

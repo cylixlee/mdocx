@@ -10,6 +10,10 @@ import { renderParagraph } from './render-paragraph'
 import { renderTable } from './render-table'
 import { mathmlToDocxChildren } from '../extensions/mathml-to-docx'
 
+function isStandaloneImage(tokens: { type: string }[] | undefined): boolean {
+  return !!tokens && tokens.length > 0 && tokens.every((t) => t.type === 'image')
+}
+
 export function renderBlocks(render: MarkdownDocx, blocks: IBlockToken[], attr: IBlockAttr = {}): FileChild[] {
   const paragraphs: FileChild[] = []
   for (const block of blocks) {
@@ -96,6 +100,7 @@ function renderBlock(render: MarkdownDocx, block: IBlockToken, attr: IBlockAttr)
       return renderParagraph(render, block.tokens as IInlineToken[], {
         style: classes.Paragraph, // can be overridden by attr
         ...attr,
+        ...(isStandaloneImage(block.tokens) ? { align: 'center' as const, indentFirstLine: false as const } : {}),
       })
     case 'text':
       if (block.tokens?.length) {

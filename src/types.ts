@@ -158,6 +158,12 @@ export type IBlockAttr = {
 
   footnote?: boolean
 
+  /**
+   * When false, override the style's first-line indent with 0.
+   * Used for centered standalone images.
+   */
+  indentFirstLine?: false
+
 }
 
 export type Writeable<T> = {

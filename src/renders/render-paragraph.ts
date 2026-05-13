@@ -24,7 +24,8 @@ export function renderParagraph (render: MarkdownDocx, tokens: IInlineToken[] | 
       reference: 'numbering-points',
       instance: attr.list.instance,
     } : undefined,
-    style: attr.style
+    style: attr.style,
+    ...(attr.indentFirstLine === false ? { indent: { firstLine: 0 } } : {}),
   }
 
   const children = typeof tokens === 'string' ? renderText(render, tokens, {}) : renderTokens(render, tokens, {})
