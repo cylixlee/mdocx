@@ -21,7 +21,18 @@
     "url": "git+https://github.com/cylixlee/mdocx.git"
   },
   "license": "MIT",
-  "author": "Cylix Lee <cylix.lee@outlook.com> (https://github.com/cylixlee)",
+  "author": {
+    "name": "Cylix Lee",
+    "email": "cylix.lee@outlook.com",
+    "url": "https://github.com/cylixlee"
+  },
+  "contributors": [
+    {
+      "name": "Vace",
+      "email": "ocdo@qq.com",
+      "url": "https://github.com/vace"
+    }
+  ],
   "type": "module",
   "exports": {
     ".": {
