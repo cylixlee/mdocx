@@ -1,6 +1,6 @@
 {
   "name": "@cylixlee/mdocx",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Convert Markdown file to DOCX format",
   "keywords": [
     "markdown",
@@ -10,7 +10,9 @@
     "markdown-docx",
     "markdown-to-word",
     "markdown-to-doc",
-    "markdown-to-word-doc"
+    "markdown-to-word-doc",
+    "mcp",
+    "model-context-protocol"
   ],
   "homepage": "https://github.com/cylixlee/mdocx",
   "bugs": {
